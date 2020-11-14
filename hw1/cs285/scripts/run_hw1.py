@@ -5,6 +5,8 @@ from cs285.infrastructure.rl_trainer import RL_Trainer
 from cs285.agents.bc_agent import BCAgent
 from cs285.policies.loaded_gaussian_policy import LoadedGaussianPolicy
 
+from mujoco_py import GlfwContext
+
 class BC_Trainer(object):
 
     def __init__(self, params):
@@ -113,8 +115,17 @@ def main():
     ### RUN TRAINING
     ###################
 
+    GlfwContext(offscreen=True)  # Create a window to init GLFW.
+
     trainer = BC_Trainer(params)
     trainer.run_training_loop()
 
 if __name__ == "__main__":
     main()
+
+
+# python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Humanoid.pkl --env_name Humanoid-v2 --exp_name dagger_human --n_iter 10 --do_dagger --expert_data cs285\expert_data\expert_data_Humanoid-v2.pkl --video_log_freq 1 --ep_len 5000 --batch_size 50000
+# python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Humanoid.pkl --env_name Humanoid-v2 --exp_name bc_human --n_iter 1 --expert_data cs285\expert_data\expert_data_Humanoid-v2.pkl --video_log_freq -1
+
+# python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Ant.pkl --env_name Ant-v2 --exp_name dagger_ant --n_iter 10 --do_dagger --expert_data cs285\expert_data\expert_data_Ant-v2.pkl --video_log_freq 1 --ep_len 200
+# python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Ant.pkl --env_name Ant-v2 --exp_name bc_ant --n_iter 1 --expert_data cs285\expert_data\expert_data_Ant-v2.pkl --video_log_freq -1

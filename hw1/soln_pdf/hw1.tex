@@ -1,0 +1,95 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat  = 1.17}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{ %
+	% language=Python,                	% choose the language of the code
+	basicstyle=\ttfamily\footnotesize, 	% the size of the fonts that are used for the code
+	numbers=left,                   	% where to put the line-numbers
+	numberstyle=\ttfamily\footnotesize, % the size of the fonts that are used for the line-numbers
+	stepnumber=1,                   	% the step between two line-numbers. If it is 1 each line will be numbered
+	numbersep=5pt,                  	% how far the line-numbers are from the code
+	backgroundcolor=\color{white}, 		% choose the background color. You must add \usepackage{color}
+	showspaces=false,               	% show spaces adding particular underscores
+	showstringspaces=false,         	% underline spaces within strings
+	showtabs=false,                 	% show tabs within strings adding particular underscores
+	frame=single,           			% adds a frame around the code
+	tabsize=4,          				% sets default tabsize to 4 spaces
+	captionpos=t,           			% sets the caption-position to bottom
+	breaklines=true,        			% sets automatic line breaking
+	breakatwhitespace=false,    		% sets if automatic breaks should only happen at whitespace
+	escapeinside={\%*}{*)}          	% if you want to add a comment within your code
+	% prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}})
+}
+
+\pagenumbering{gobble}
+
+\begin{document}
+\section{Behavioral Cloning}
+\stepcounter{subsection}
+\subsection{}
+
+Training with the default settings set in \texttt{run\_hw1.py}, except for \texttt{eval\_batch\_size=10000} and 
+\texttt{ep\_len=1000} (so approximately 10 trajectories), I arrived at the following results:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+	\hline
+	Environment & Expert Mean & BC Mean & BC std & \% of Expert \\
+	\hline
+	Ant-v2 & 4713.653 & 4374.649 & 1108.576 & 92.8\% \\
+	\hline
+	Humanoid-v2 & 10344.51 & 280.917 & 12.222 & 2.71\% \\
+	\hline
+
+\end{tabular}
+\end{center}
+
+\noindent
+The agent was trained with only trained for 1000 steps on a network with 2 hidden layers, 
+each of size 64. From the table, we see that the Ant task achieved 92\% of the
+expert performance, while the on the Humanoid task, the agent did not reach at least 30\% 
+of the expert's performance, instead reaching only 2.71\% of the expert performance. 
+
+\noindent
+Here are the commands that could reproduce my results:
+
+
+\begin{lstlisting}[caption=Ant task]
+python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Ant.pkl --env_name Ant-v2 --exp_name bc_ant --n_iter 1 --expert_data cs285\expert_data\expert_data_Ant-v2.pkl --video_log_freq -1 --ep_len 1000 --eval_batch_size 10000
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Humanoid task]
+python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Humanoid.pkl --env_name Humanoid-v2 --exp_name bc_human --n_iter 1 --expert_data cs285\expert_data\expert_data_Humanoid-v2.pkl --video_log_freq -1 --ep_len 1000 --eval_batch_size 10000
+\end{lstlisting}
+
+\subsection{}
+
+For this, I decided touse the Humanoid task and  vary the amount learning rate of the MLP policy between 0.05 and 0.0001 on a log 
+scale. Here's the command I used: 
+
+\begin{lstlisting}
+python cs285\scripts\run_hw1.py --expert_policy_file cs285\policies\experts\Humanoid.pkl --env_name Humanoid-v2 --exp_name bc_human --n_iter 1 --expert_data cs285\expert_data\expert_data_Humanoid-v2.pkl --video_log_freq -1 --num_agent_train_steps_per_iter 50000 --lr <learning_rate>
+\end{lstlisting}
+\noindent
+where \texttt{<learning\_rate>} is varied. Figure 1 below shows the results:
+
+\begin{figure}
+    \centering
+    \input{lr.pgf}
+    \caption{
+    The agent was trained for 50,000 steps on the expert data. The policy network had 2 hidden layers, each of size 64. I chose to
+	vary the learning rate because with deep neural networks, the learning rate is often one of the more important and impactful
+	hyperparameters, so I thought there may be a similar case in behavioral cloning.}
+\end{figure}
+
+\noindent
+
+\end{document}
