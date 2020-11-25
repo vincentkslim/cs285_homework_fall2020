@@ -1,3 +1,7 @@
+## This homework (code + data visualization) is complete.
+
+Note that there may be minor bugs in the code.
+
 ## Setup
 
 You can run this code on your own machine or on Google Colab. 

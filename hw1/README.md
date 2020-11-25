@@ -1,3 +1,5 @@
+## The code for this homework is complete, however the deliverable PDF is not.
+
 ## Setup
 
 You can run this code on your own machine or on Google Colab. 
