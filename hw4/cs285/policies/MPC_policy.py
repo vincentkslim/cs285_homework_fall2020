@@ -34,6 +34,8 @@ class MPCPolicy(BasePolicy):
         # TODO(Q1) uniformly sample trajectories and return an array of
         # dimensions (num_sequences, horizon, self.ac_dim) in the range
         # [self.low, self.high]
+        random_action_sequences = np.random.uniform(low=self.low, high=self.high, size=(num_sequences, self.horizon, self.ac_dim))
+
         return random_action_sequences
 
     def get_action(self, obs):
