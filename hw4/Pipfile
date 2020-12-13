@@ -21,6 +21,8 @@ notebook = "*"
 tensorflow = "*"
 pandas = "*"
 seaborn = "*"
+torch = "*"
+torchvision = "*"
 
 [requires]
 python_version = "3.7"
